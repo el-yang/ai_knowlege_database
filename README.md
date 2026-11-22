@@ -14,7 +14,7 @@
 - NDJSON 流式输出与多轮会话历史
 - Tavily 联网搜索（可选）
 - Redis 请求限流
-- 单页 Web UI，无需额外前端构建
+- React 18 + Vite 单页前端，构建产物直接打进 Spring Boot 静态资源
 
 ## 技术栈
 
@@ -27,7 +27,7 @@
 | 大模型 | OpenRouter（默认 `z-ai/glm-4.5-air`） |
 | Embedding | Ollama、`nomic-embed-text` |
 | 文档解析 | PDFBox、Apache POI、Tess4J |
-| 前端 | 原生 HTML、CSS、JavaScript |
+| 前端 | React 18、TypeScript、Vite 5 |
 | 构建 | Maven Wrapper |
 
 ## 工作流程
@@ -109,6 +109,37 @@ macOS / Linux：
 ```
 
 打开 <http://localhost:8080>。
+
+## 前端开发
+
+前端位于 `frontend/`，使用 React 18 + TypeScript + Vite 编写，构建产物输出到 `src/main/resources/static`。仓库中已包含最新的构建结果，因此只是运行应用的话不需要安装 Node。
+
+```bash
+cd frontend
+npm install     # 首次安装依赖
+npm run dev     # 开发服务器 http://localhost:5173，/api 自动代理到 8080
+npm run build   # 类型检查 + 构建到 src/main/resources/static
+```
+
+开发时先启动后端（8080），再启动 Vite（5173），修改代码会热更新。
+
+也可以用 Maven 一次性构建前端（会额外下载独立的 Node 环境）：
+
+```bash
+./mvnw -Pfrontend clean package
+```
+
+目录结构：
+
+```text
+frontend/src
+├── api/          # 接口请求、DTO 类型、NDJSON 流式解析
+├── auth/         # 登录态 Context（token 校验、登录/退出）
+├── components/   # 登录页、侧边栏、消息气泡、输入框
+├── hooks/        # useChat：会话、上传、流式问答状态
+├── pages/        # ChatPage 页面装配
+└── utils/        # 时间格式化、按用户隔离的 localStorage
+```
 
 ## VS Code 运行
 

@@ -63,10 +63,8 @@ public class LlmService {
                         )
                 ),
                 "temperature", 0.2,
-                "max_tokens", 800,
-                "reasoning", Map.of(
-                        "enabled", false
-                )
+                "max_tokens", 800
+
         );
 
         try {
@@ -128,10 +126,8 @@ public class LlmService {
                             )
                     ),
                     "temperature", 0.2,
-                    "max_tokens", 800,
-                    "reasoning", Map.of(
-                            "enabled", false
-                    )
+                    "max_tokens", 800
+
             );
 
             String json = objectMapper.writeValueAsString(requestBody);

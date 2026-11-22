@@ -146,4 +146,61 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<!--
+			可选：用 Maven 一起构建 React 前端。
+			默认不启用，避免每次 mvn package 都下载 Node。
+			用法：mvn -Pfrontend clean package
+		-->
+		<profile>
+			<id>frontend</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.github.eirslett</groupId>
+						<artifactId>frontend-maven-plugin</artifactId>
+						<version>1.15.1</version>
+						<configuration>
+							<workingDirectory>frontend</workingDirectory>
+							<installDirectory>frontend</installDirectory>
+						</configuration>
+						<executions>
+							<execution>
+								<id>install-node-and-npm</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>install-node-and-npm</goal>
+								</goals>
+								<configuration>
+									<nodeVersion>v22.12.0</nodeVersion>
+									<npmVersion>10.9.0</npmVersion>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm-install</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>install --no-audit --no-fund</arguments>
+								</configuration>
+							</execution>
+							<execution>
+								<id>npm-build</id>
+								<phase>generate-resources</phase>
+								<goals>
+									<goal>npm</goal>
+								</goals>
+								<configuration>
+									<arguments>run build</arguments>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 </project>
